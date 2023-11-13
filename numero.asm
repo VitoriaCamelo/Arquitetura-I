@@ -1,5 +1,5 @@
 ; Vitoria C. dos S. Camelo
-; para a disciplina de Arquitetura I
+; Tentando passar em Arquitetura I
 
 ; inicia stack do programa com 128 B
 pilha	segment stack
@@ -9,15 +9,12 @@ pilha	ends
 
 ; secao dos dados
 dados	segment
-boas_vindas db 'Seja bem vindo a calculadora de notas!#'
-msg_nota1   db 'Digite a primeira nota (000 a 100): #'
 nota	    db  0			; nota para imprimir
 nota1	    db  0			; dw 0
 nota2	    db	0
 nota3	    db	0
 qtde_notas  db  3
 media	    db  0
-;erro	    db  0
 dezena	    db  0
 unidade	    db  0
 resto 	    db  0
@@ -26,12 +23,13 @@ subtraendo  db  0
 quociente   db  0
 resto_media db  0			; resto da media/2
 media_parcial db 0			; guarda media+media/2
+boas_vindas db 'Seja bem vindo a calculadora de notas!#'
+msg_nota1   db 'Digite a primeira nota (000 a 100): #'
 msg_nota2   db 'Digite a segunda nota (000 a 100): #'
 msg_nota3   db 'Digite a terceira nota (000 a 100): #'
-msg_media   db 'Sua media e #'
 msg_reprovou db 'Sinto muito, voce reprovou #'
 msg_final   db 'Nota que voce precisa tirar na prova final: #'
-carac	    db ','
+msg_passou_direto db 'Parabens, voce passou direto #'
 
 dados ends
 
@@ -327,8 +325,8 @@ Media100:
 	call	imprimir;  	
         mov     al,0ah			; proxima linha
 	call    imprimir
+	lea	di, msg_passou_direto
 	jmp	PassouDireto
-	; PASSOU DIRETO ERA AQUI
 
 ResultadoMaiorQue10:
 	cmp	al, bl
@@ -407,34 +405,19 @@ Decisao:
 	jl	PreparaReprovou
 	cmp	al, 7
 	jl 	PreparaMsgFinal
+	lea	di, msg_passou_direto
 	;jmp 	PassouDireto
 
 PassouDireto:
-	mov	al, 50h
-	call	imprimir
-	mov	al, 61h
-	call	imprimir
-	mov	al, 72h
-	call	imprimir
-	mov	al, 61h
-	call	imprimir
-	mov	al, 62h
-	call	imprimir
-	mov	al, 65h
-	call	imprimir
-	mov	al, 6eh
-	call	imprimir
-	mov	al, 73h
-	call	imprimir
-	;----
-	jmp	fim
+	mov     al,[di]
+	cmp     al,'#'
+	jz      FimDistante 		;fim
+	call    imprimir
+	inc     di
+	jmp     PassouDireto
 
 PreparaReprovou:
 	lea     di, msg_reprovou
-	;mov     al,0dh			; inicio da linha
-	;call	imprimir;  	
-        ;mov     al,0ah			; proxima linha
-	;call    imprimir
 	jmp     Reprovou
 
 Reprovou:
@@ -447,10 +430,6 @@ Reprovou:
 
 PreparaMsgFinal:
 	lea     di, msg_final
-	;mov     al,0dh			; inicio da linha
-	;call	imprimir;  	
-        ;mov     al,0ah			; proxima linha
-	;call    imprimir
 	jmp     MsgFinal
 
 MsgFinal:
