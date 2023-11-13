@@ -1,5 +1,5 @@
 ; Vitoria C. dos S. Camelo
-; Tentando passar em Arquitetura I
+; projeto para a disciplina de Arquitetura I
 
 ; inicia stack do programa com 128 B
 pilha	segment stack
