@@ -1,6 +1,5 @@
 ; Vitoria C. dos S. Camelo
 ; Tentando passar em Arquitetura I
-; No meio, acho que fiquei feliz
 
 ; inicia stack do programa com 128 B
 pilha	segment stack
@@ -24,6 +23,7 @@ unidade	    db  0
 resto 	    db  0
 minuendo    db  125
 subtraendo  db  0
+quociente   db  0
 resto_media db  0			; resto da media/2
 media_parcial db 0			; guarda media+media/2
 msg_nota2   db 'Digite a segunda nota (000 a 100): #'
@@ -435,7 +435,7 @@ PreparaMsgFinal:
 MsgFinal:
 	mov     al,[di]
 	cmp     al,'#'
-	jz      FimDistante; NotaFinal		; FimDistante  		
+	jz      NotaFinal		; FimDistante  		
 	call    imprimir
 	inc     di
 	jmp     MsgFinal
@@ -464,9 +464,12 @@ MediaSobre2:
 	jmp 	MediaSobre2
 
 ProcessarFinal:
+	mov	quociente, ah
 	; - calculo do resto de media+media/2
-	mov	bl, 50			
-	mul	bl			; 0 ou 5 no resto
+	mov	bl, 5	
+	mul	bl	
+	mov	bl, 10
+	mul	bl			; 0 ou 50 no resto
 	mov	resto_media, al
 	mov	al, resto
 	mov	bh, resto
@@ -483,26 +486,27 @@ ProcessarFinal:
 	add	al, bl
 	mov	resto, al		; todos os restos
 	; 125 - media+media/2)
-	mov	al, ah
+	mov	al, quociente
 	mov	bl, media
 	add	al, bl
-	mov	minuendo, al
-	mov	al, subtraendo
-	mov	bl, minuendo
+	mov	subtraendo, al
+	mov	al, minuendo
+	mov	bl, subtraendo
 	sub	al, bl			; 125 - media+media/2
-	mov	subtraendo, al		; ainda precisa tirar restos
+	mov	minuendo, al		; ainda precisa tirar restos
 	; - escolha dos metodos para restos
+	; ----- ATE AQUI OK ----
 	mov	al, resto
-	;cmp	al, 0
-	;jz 	SubtracaoComum
+	cmp	al, 0
+	jz 	DezUniFinal
 	cmp	al, 99
 	jg	SubtracaoCom2
 	; - subtracao com 1
-	mov	al, subtraendo
+	mov	al, minuendo
 	mov	bl, 1
 	sub	al, bl
-	mov	subtraendo, al		; antes do ponto
-	mov	al, 100
+	mov	minuendo, al		; antes do ponto
+	mov	al, 100 
 	mov	bl, resto
 	sub	al, bl
 	mov	resto, al		; para imprimir depois do ponto
@@ -510,20 +514,21 @@ ProcessarFinal:
 	; - hora de processar saida
 	
 SubtracaoCom2:				; para casos como 155
-	mov	al, subtraendo
+	mov	al, minuendo
 	mov	bl, 2			; pegar emprestado
 	sub	al, bl
-	mov	subtraendo, al		; antes do ponto
+	mov	minuendo, al		; antes do ponto
 	mov	al, 200			
 	mov	bl, resto
 	sub	al, bl
 	mov	resto, al		; depois do ponto
 
 DezUniFinal:				; dezena e unidade da final
+	mov	al, minuendo
 	mov 	bl, 10
 	mov	ah, 0
 	mov	bh, 0		; usar para menor que 10
-	;jmp 	FinalMaiorQue10	; parecido com print(media)
+	;jmp 	FinalMaiorQue10	
 	
 FinalMaiorQue10:
 	cmp	al, bl
