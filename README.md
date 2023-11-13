@@ -1,2 +1,2 @@
 # ArqI
-Repositório para o projeto 2 da disciplina ArquiteturaI
+Repositório para o projeto 2 da disciplina Arquitetura I
