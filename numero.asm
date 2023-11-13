@@ -1,5 +1,5 @@
 ; Vitoria C. dos S. Camelo
-; Tentando passar em Arquitetura I
+; para a disciplina de Arquitetura I
 
 ; inicia stack do programa com 128 B
 pilha	segment stack
@@ -303,6 +303,20 @@ Media100:
 	call	imprimir;  	
         mov     al,0ah			; proxima linha
 	call    imprimir
+	; media = 
+	mov	al, 4dh
+	call	imprimir
+	mov	al, 65h
+	call	imprimir
+	mov	al, 64h
+	call	imprimir	
+	mov	al, 69h
+	call	imprimir
+	mov	al, 61h
+	call	imprimir
+	mov	al, 3dh
+	call	imprimir
+	; - nota 100
 	mov	al, 31h
 	call	imprimir
 	mov	al, 30h
@@ -313,25 +327,8 @@ Media100:
 	call	imprimir;  	
         mov     al,0ah			; proxima linha
 	call    imprimir
-	;---- mensagem "Parabens" de forma bruta
-	mov	al, 50h
-	call	imprimir
-	mov	al, 61h
-	call	imprimir
-	mov	al, 72h
-	call	imprimir
-	mov	al, 61h
-	call	imprimir
-	mov	al, 62h
-	call	imprimir
-	mov	al, 65h
-	call	imprimir
-	mov	al, 6eh
-	call	imprimir
-	mov	al, 73h
-	call	imprimir
-	;----
-	jmp	fim
+	jmp	PassouDireto
+	; PASSOU DIRETO ERA AQUI
 
 ResultadoMaiorQue10:
 	cmp	al, bl
@@ -401,19 +398,43 @@ Resto2:
 ;	jmp	fim
 
 Decisao:
+	mov     al,0dh			; inicio da linha
+	call	imprimir;  	
+        mov     al,0ah			; proxima linha
+	call    imprimir
 	mov	al, dezena
 	cmp	al, 4
 	jl	PreparaReprovou
 	cmp	al, 7
 	jl 	PreparaMsgFinal
-	jmp	fim	
+	;jmp 	PassouDireto
+
+PassouDireto:
+	mov	al, 50h
+	call	imprimir
+	mov	al, 61h
+	call	imprimir
+	mov	al, 72h
+	call	imprimir
+	mov	al, 61h
+	call	imprimir
+	mov	al, 62h
+	call	imprimir
+	mov	al, 65h
+	call	imprimir
+	mov	al, 6eh
+	call	imprimir
+	mov	al, 73h
+	call	imprimir
+	;----
+	jmp	fim
 
 PreparaReprovou:
 	lea     di, msg_reprovou
-	mov     al,0dh			; inicio da linha
-	call	imprimir;  	
-        mov     al,0ah			; proxima linha
-	call    imprimir
+	;mov     al,0dh			; inicio da linha
+	;call	imprimir;  	
+        ;mov     al,0ah			; proxima linha
+	;call    imprimir
 	jmp     Reprovou
 
 Reprovou:
@@ -426,10 +447,10 @@ Reprovou:
 
 PreparaMsgFinal:
 	lea     di, msg_final
-	mov     al,0dh			; inicio da linha
-	call	imprimir;  	
-        mov     al,0ah			; proxima linha
-	call    imprimir
+	;mov     al,0dh			; inicio da linha
+	;call	imprimir;  	
+        ;mov     al,0ah			; proxima linha
+	;call    imprimir
 	jmp     MsgFinal
 
 MsgFinal:
@@ -535,7 +556,7 @@ FinalMaiorQue10:
 	jl	ImprimirFinal
 	sub	al, bl		
 	add	ah, 1			; ate 10
-	jmp 	ResultadoMaiorQue10
+	jmp 	FinalMaiorQue10
 
 ImprimirFinal:
 	mov	unidade, al		; no maximo 9
@@ -570,10 +591,6 @@ RestoMaiorQue10:
 ImprimirResto:
 	mov	unidade, al		; no maximo 9
 	mov	dezena, ah
-	mov     al,0dh			; inicio da linha
-	call	imprimir;  	
-        mov     al,0ah			; proxima linha
-	call	imprimir
 	; ---- impressao 
 	mov	al, dezena
 	add	al, 30h
@@ -654,11 +671,3 @@ teclado endp
 
 codigo	ends
 	end	inicio	
-
-; -------- rascunho -------
-;SubtracaoComum:
-	; tratar mensagem antes do ponto
-;	mov 	bl, 10
-;	mov	ah, 0
-;	mov	bh, 0		; usar para menor que 10
-;	jmp 	FinalMaiorQue10	; parecido com print(media)
